@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Agents — BLACKVEIL</title>
+<link rel="canonical" href="https://blackveil.fi/agents">
+<meta property="og:site_name" content="BLACKVEIL">
+<meta property="og:title" content="Agents — BLACKVEIL">
+<meta property="og:description" content="Give an AI agent a vault under a mandate: per payment, per 24 hours, a review line and an allowlist, enforced by the contract.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://blackveil.fi/agents">
+<meta property="og:image" content="https://blackveil.fi/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@blackveilfi">
+<meta name="twitter:title" content="Agents — BLACKVEIL">
+<meta name="twitter:description" content="Give an AI agent a vault under a mandate: per payment, per 24 hours, a review line and an allowlist, enforced by the contract.">
+<meta name="twitter:image" content="https://blackveil.fi/og.png">
+<meta name="description" content="Connect an AI agent to a BLACKVEIL vault: a drop-in module, routeFor() semantics and the reason codes a refusal returns.">
+<meta name="theme-color" content="#090909">
+<link rel="icon" href="/img/favicon-64.png" type="image/png" sizes="64x64">
+<link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<link rel="stylesheet" href="/css/site.css">
+<script src="/config.js"></script>
+</head>
+<body>
+<main class="wrap">
+  <div class="page-head">
+    <div class="label"><span class="n">AGENTS</span><span>For developers</span><span class="r">agentPay · routeFor</span></div>
+    <h1 class="h2">Give an agent a vault,<br><em>not your wallet.</em></h1>
+    <p class="lead">Your agent signs with its own key. The contract lets that key spend from one vault, in USDG, inside the mandate you set — and nothing else. This page is everything you need to wire it up.</p>
+  </div>
+  <div class="doc">
+    <nav class="toc">
+      <a href="#setup">1 · Set up</a><a href="#module">2 · The module</a><a href="#route">3 · Settles, queues, refuses</a>
+      <a href="#reasons">4 · Reason codes</a><a href="#limits">5 · What the key cannot do</a><a href="#direct">6 · Calling the contract directly</a>
+    </nav>
+    <article>
+      <h2 id="setup">1 · Set up</h2>
+      <ol>
+        <li>Open <a class="brass" href="/app#agents">Bank → Agents</a>, press <b>Generate</b> (or paste the address of a key your agent already has) and choose the limits.</li>
+        <li>Fund the vault from your bank balance. The vault is the most the agent can ever spend; return it to your balance whenever you like.</li>
+        <li>Send the agent key a little ETH for gas (the <b>Send gas</b> button does it).</li>
+        <li>Give the agent its private key and its agent number. That is all it needs.</li>
+      </ol>
+
+      <h2 id="module">2 · The module</h2>
+      <p>One file, ethers v6, no other dependency. <a class="brass" href="/sdk/blackveil-agent.mjs" download>Download blackveil-agent.mjs</a></p>
+<pre class="code"><code><span class="k">import</span> { BlackveilAgent } <span class="k">from</span> <span class="s">'./blackveil-agent.mjs'</span>
+
+<span class="k">const</span> agent = <span class="k">new</span> BlackveilAgent({ privateKey: process.env.AGENT_KEY, agentId: <span class="s">1</span>, bank: <span class="s" id="bank-lit">'0x…'</span> })
+
+<span class="c">// ask first — free, no transaction</span>
+<span class="k">await</span> agent.route(<span class="s">'ledger-co'</span>, <span class="s">'15.00'</span>)      <span class="c">// { route: 'Settles', reason: 'None' }</span>
+
+<span class="c">// then pay; a handle or a 0x address both work</span>
+<span class="k">const</span> r = <span class="k">await</span> agent.pay(<span class="s">'ledger-co'</span>, <span class="s">'15.00'</span>, { ref: <span class="s">'inv 0x8a19'</span> })
+<span class="c">// { route: 'Settles', sent: true, hash: '0x…' }
+// { route: 'Queues',  sent: true, pendingId: 3 }       ← waits for the owner
+// { route: 'Refuses', reason: 'OverPerPayment', sent: false }</span>
+
+<span class="k">await</span> agent.status()   <span class="c">// vault, spentToday, limits, paused/revoked</span></code></pre>
+      <p>From a shell: <code>AGENT_KEY=0x… AGENT_ID=1 node blackveil-agent.mjs pay ledger-co 15 "inv 0x8a19"</code></p>
+      <p>By default a refused payment is not sent, to save gas. Pass <code>recordRefusals: true</code> if you want every refused attempt written on chain as an <code>AgentRefused</code> event.</p>
+
+      <h2 id="route">3 · Settles, queues, refuses</h2>
+      <p><code>routeFor(agentId, to, amount)</code> runs the same checks as <code>agentPay</code>, in this order:</p>
+      <div class="panel scroll-x"><table class="tbl">
+        <thead><tr><th>Check</th><th>Outcome</th></tr></thead>
+        <tbody>
+          <tr><td>Agent revoked or paused</td><td><span class="route Refuses">Refuses</span></td></tr>
+          <tr><td>Allowlist on and the recipient is not on it</td><td><span class="route Refuses">Refuses</span></td></tr>
+          <tr><td>Amount above the per-payment limit</td><td><span class="route Refuses">Refuses</span></td></tr>
+          <tr><td>Vault smaller than amount + fee</td><td><span class="route Refuses">Refuses</span></td></tr>
+          <tr><td>Amount above the review line</td><td><span class="route Queues">Queues</span> — the amount and fee are reserved from the vault until the owner approves or rejects</td></tr>
+          <tr><td>Today's spend + amount above the 24-hour limit</td><td><span class="route Refuses">Refuses</span></td></tr>
+          <tr><td>Otherwise</td><td><span class="route Settles">Settles</span> — paid at once, counted toward the 24-hour window</td></tr>
+        </tbody>
+      </table></div>
+      <p>The 24-hour window starts with the first settled payment and resets 24 hours later. Payments the owner approves from the queue do not count toward it — the owner already decided.</p>
+
+      <h2 id="reasons">4 · Reason codes</h2>
+      <div class="panel scroll-x"><table class="tbl">
+        <thead><tr><th>Code</th><th>Name</th><th>What to do</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">1</td><td class="mono">Paused</td><td>The owner paused the agent. Wait.</td></tr>
+          <tr><td class="mono">2</td><td class="mono">Revoked</td><td>This key is finished. Stop.</td></tr>
+          <tr><td class="mono">3</td><td class="mono">ZeroAmount</td><td>Send a positive amount.</td></tr>
+          <tr><td class="mono">4</td><td class="mono">NotAllowlisted</td><td>Ask the owner to allow this recipient.</td></tr>
+          <tr><td class="mono">5</td><td class="mono">OverPerPayment</td><td>Split the bill or ask for a higher limit.</td></tr>
+          <tr><td class="mono">6</td><td class="mono">OverDaily</td><td>Try after the window resets.</td></tr>
+          <tr><td class="mono">7</td><td class="mono">InsufficientVault</td><td>Ask the owner to fund the vault.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h2 id="limits">5 · What the key cannot do</h2>
+      <ul>
+        <li>Withdraw from the vault, or touch the owner's balance.</li>
+        <li>Change its own limits, allowlist, status or key — those calls check the owner, not the signer.</li>
+        <li>Approve its own queued payments.</li>
+        <li>Keep working after the owner revokes or rotates it.</li>
+      </ul>
+      <p>If the key leaks, the most it can move is what the mandate allows until you pause it. Revoking returns the whole vault to your balance in the same transaction.</p>
+
+      <h2 id="direct">6 · Calling the contract directly</h2>
+<pre class="code"><code><span class="c">// Solidity / any client — Robinhood Chain (4663), USDG has 6 decimals</span>
+<span class="k">function</span> routeFor(uint256 agentId, address to, uint256 amount) view returns (uint8 route, uint8 reason)
+<span class="k">function</span> agentPay(uint256 agentId, address to, uint256 amount, bytes32 ref, bool toWallet) returns (uint8 route, uint256 pendingId)
+<span class="k">function</span> resolve(string handle) view returns (address)
+<span class="k">event</span> Payment(address indexed from, address indexed to, uint256 amount, uint256 fee, bytes32 ref, uint8 kind, uint256 refId, bool toWallet)
+<span class="k">event</span> Queued(uint256 indexed pendingId, uint256 indexed agentId, address indexed to, uint256 amount, bytes32 ref)
+<span class="k">event</span> AgentRefused(uint256 indexed id, address indexed to, uint256 amount, uint8 reason, bytes32 ref)</code></pre>
+      <p><code>ref</code> is any 32-byte reference — an invoice id, an order number. It travels into the <code>Payment</code> event so you can reconcile. <code>toWallet = true</code> sends USDG straight to the recipient's wallet instead of their BLACKVEIL balance. Full ABI: <a class="brass" href="/abi/BlackveilBank.json">/abi/BlackveilBank.json</a> · source: <a class="brass" href="/verify#source">Verify</a>.</p>
+    </article>
+  </div>
+</main>
+<script type="module">
+  import { chrome, CFG, $ } from '/js/common.js';
+  chrome();
+  if (CFG.bank) $('#bank-lit').textContent = `'${CFG.bank}'`;
+</script>
+</body>
+</html>

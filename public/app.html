@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bank — BLACKVEIL</title>
+<link rel="canonical" href="https://blackveil.fi/app">
+<meta property="og:site_name" content="BLACKVEIL">
+<meta property="og:title" content="Bank — BLACKVEIL">
+<meta property="og:description" content="Your BLACKVEIL account: handle, USDG balance, payments, requests to pay and agent vaults on Robinhood Chain.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://blackveil.fi/app">
+<meta property="og:image" content="https://blackveil.fi/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@blackveilfi">
+<meta name="twitter:title" content="Bank — BLACKVEIL">
+<meta name="twitter:description" content="Your BLACKVEIL account: handle, USDG balance, payments, requests to pay and agent vaults on Robinhood Chain.">
+<meta name="twitter:image" content="https://blackveil.fi/og.png">
+<meta name="description" content="Your BLACKVEIL account: handle, USDG balance, payments, requests to pay and agent vaults.">
+<meta name="theme-color" content="#090909">
+<link rel="icon" href="/img/favicon-64.png" type="image/png" sizes="64x64">
+<link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<link rel="stylesheet" href="/css/site.css">
+<link rel="stylesheet" href="/css/app.css">
+<script src="/config.js"></script>
+<script src="/vendor/ethers.umd.min.js"></script>
+</head>
+<body>
+<main class="wrap app">
+  <div class="app-head">
+    <div class="label"><span class="n">BANK</span><span>Your account</span><span class="r" id="net">Robinhood Chain · USDG</span></div>
+  </div>
+
+  <div id="nobank" class="panel notice hide">
+    <div class="pb">
+      <h3 class="h3">The bank contract deploys before launch.</h3>
+      <p class="p">This page talks to the BlackveilBank contract directly. Until its address is published here, there is nothing to connect to — and we won't show a pretend account in the meantime. <a class="brass" href="/verify">See what is live →</a></p>
+    </div>
+  </div>
+
+  <div id="connect" class="panel notice hide">
+    <div class="pb">
+      <h3 class="h3">Connect a wallet to open your account.</h3>
+      <p class="p">Any wallet on Robinhood Chain works. Your account is your address — a handle is optional and can change later.</p>
+      <div class="wallet-list" id="wallet-list"></div>
+    </div>
+  </div>
+
+  <div id="bank" class="bank hide">
+    <aside class="acct panel">
+      <div class="pb">
+        <div class="handle" id="a-handle">—</div>
+        <div class="addr mono" id="a-addr"></div>
+        <div class="bal"><span class="k">Bank balance</span><span class="v num" id="a-bal">—</span></div>
+        <div class="kv"><span>Wallet USDG</span><span class="num" id="a-wallet">—</span></div>
+        <div class="kv"><span>Wallet ETH (gas)</span><span class="num" id="a-eth">—</span></div>
+        <div class="kv"><span>Charter</span><span id="a-charter">—</span></div>
+        <div class="kv"><span>Agent slots</span><span class="num" id="a-slots">—</span></div>
+        <form class="claim" id="f-handle">
+          <label class="field"><span>Handle</span>
+            <div class="suffix"><input class="input" name="handle" placeholder="yourname" autocomplete="off" spellcheck="false" maxlength="20"><em>.veil</em></div>
+          </label>
+          <button class="btn sm" type="submit">Claim handle</button>
+          <div class="hint" id="h-hint"></div>
+        </form>
+        <button class="btn xs ghost" id="disconnect">Disconnect</button>
+      </div>
+    </aside>
+
+    <section class="work">
+      <div class="tabs" role="tablist">
+        <button data-tab="pay" class="on">Pay</button>
+        <button data-tab="funds">Deposit · Withdraw</button>
+        <button data-tab="requests">Requests</button>
+        <button data-tab="agents">Agents <span class="badge hide" id="q-badge"></span></button>
+        <button data-tab="activity">Activity</button>
+      </div>
+
+      <!-- pay -->
+      <div class="tab panel" data-pane="pay">
+        <div class="ph"><span>Pay a handle or an address</span><span class="r">payHandle · pay</span></div>
+        <form class="pb form-grid" id="f-pay">
+          <label class="field"><span>To</span><input class="input mono" name="to" placeholder="atlas  or  0x…" autocomplete="off" spellcheck="false"></label>
+          <div class="hint" id="to-hint"></div>
+          <div class="two">
+            <label class="field"><span>Amount (USDG)</span><input class="input num" name="amount" inputmode="decimal" placeholder="0.00"></label>
+            <label class="field"><span>Memo (optional, 31 bytes)</span><input class="input" name="memo" maxlength="31" placeholder="dinner, tuesday"></label>
+          </div>
+          <div class="two">
+            <div class="field"><span>Pay from</span><div class="seg" data-name="from"><button type="button" data-v="bank" class="on">Bank balance</button><button type="button" data-v="wallet">My wallet</button></div></div>
+            <div class="field"><span>Deliver to</span><div class="seg" data-name="deliver"><button type="button" data-v="bank" class="on">Their account</button><button type="button" data-v="wallet">Their wallet</button></div></div>
+          </div>
+          <div class="kv"><span>Fee (0.10 %, max 2 USDG, on you)</span><span class="num" id="pay-fee">0.00 USDG</span></div>
+          <button class="btn solid" type="submit">Pay</button>
+        </form>
+      </div>
+
+      <!-- deposit / withdraw -->
+      <div class="tab panel hide" data-pane="funds">
+        <div class="ph"><span>Move USDG in and out</span><span class="r">deposit · withdraw</span></div>
+        <div class="pb two">
+          <form class="form-grid" id="f-deposit">
+            <label class="field"><span>Deposit from wallet</span><div class="suffix"><input class="input num" name="amount" inputmode="decimal" placeholder="0.00"><button type="button" class="btn xs" data-max="wallet">Max</button></div></label>
+            <button class="btn solid" type="submit">Deposit</button>
+            <p class="p small">First deposit asks your wallet to approve USDG for the bank contract.</p>
+          </form>
+          <form class="form-grid" id="f-withdraw">
+            <label class="field"><span>Withdraw to</span><input class="input mono" name="to" placeholder="your wallet" spellcheck="false"></label>
+            <label class="field"><span>Amount</span><div class="suffix"><input class="input num" name="amount" inputmode="decimal" placeholder="0.00"><button type="button" class="btn xs" data-max="bank">Max</button></div></label>
+            <button class="btn" type="submit">Withdraw</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- requests -->
+      <div class="tab panel hide" data-pane="requests">
+        <div class="ph"><span>Ask to be paid</span><span class="r">createRequest</span></div>
+        <form class="pb form-grid" id="f-request">
+          <div class="three">
+            <label class="field"><span>Amount (USDG)</span><input class="input num" name="amount" inputmode="decimal" placeholder="0.00"></label>
+            <label class="field"><span>Memo</span><input class="input" name="memo" maxlength="31" placeholder="invoice 0042"></label>
+            <label class="field"><span>Expires</span><select class="input" name="expiry"><option value="0">Never</option><option value="3600">In 1 hour</option><option value="86400" selected>In 24 hours</option><option value="604800">In 7 days</option></select></label>
+          </div>
+          <button class="btn solid" type="submit">Create request link</button>
+        </form>
+        <div class="ph"><span>Your requests</span></div>
+        <div id="req-list" class="feed"><div class="empty">No requests yet.</div></div>
+      </div>
+
+      <!-- agents -->
+      <div class="tab hide" data-pane="agents">
+        <div class="panel" id="queue-panel">
+          <div class="ph"><span>Awaiting your decision</span><span class="r">approve · reject</span></div>
+          <div id="queue" class="feed"><div class="empty">Nothing waiting.</div></div>
+        </div>
+        <div id="agent-list" class="agent-list"></div>
+        <div class="panel">
+          <div class="ph"><span>Open an agent vault</span><span class="r">createAgent</span></div>
+          <form class="pb form-grid" id="f-agent">
+            <label class="field"><span>Agent key (address the agent signs with)</span>
+              <div class="suffix"><input class="input mono" name="signer" placeholder="0x…" spellcheck="false"><button type="button" class="btn xs" id="gen-key">Generate</button></div>
+            </label>
+            <div class="keybox hide" id="keybox"></div>
+            <div class="three">
+              <label class="field"><span>Per payment</span><input class="input num" name="per" value="50" inputmode="decimal"></label>
+              <label class="field"><span>Per 24 hours</span><input class="input num" name="day" value="200" inputmode="decimal"></label>
+              <label class="field"><span>Review above</span><input class="input num" name="review" value="20" inputmode="decimal"></label>
+            </div>
+            <label class="check"><input type="checkbox" name="allow"> <span>Only pay recipients I allowlist</span></label>
+            <button class="btn solid" type="submit">Open agent</button>
+            <p class="p small">The agent key spends only from its own vault, only inside these limits. Fund the vault after it opens; the key needs a little ETH for gas.</p>
+          </form>
+        </div>
+      </div>
+
+      <!-- activity -->
+      <div class="tab panel hide" data-pane="activity">
+        <div class="ph"><span>Your ledger</span><span class="r">from the event log</span></div>
+        <div id="act" class="feed"><div class="empty">Nothing yet.</div></div>
+      </div>
+    </section>
+  </div>
+</main>
+<script type="module" src="/js/app.js"></script>
+</body>
+</html>

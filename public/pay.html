@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Payment request — BLACKVEIL</title>
+<link rel="canonical" href="https://blackveil.fi/pay">
+<meta property="og:site_name" content="BLACKVEIL">
+<meta property="og:title" content="Payment request — BLACKVEIL">
+<meta property="og:description" content="Settle a BLACKVEIL request to pay in USDG on Robinhood Chain.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://blackveil.fi/pay">
+<meta property="og:image" content="https://blackveil.fi/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@blackveilfi">
+<meta name="twitter:title" content="Payment request — BLACKVEIL">
+<meta name="twitter:description" content="Settle a BLACKVEIL request to pay in USDG on Robinhood Chain.">
+<meta name="twitter:image" content="https://blackveil.fi/og.png">
+<meta name="description" content="Settle a BLACKVEIL request to pay in USDG on Robinhood Chain.">
+<meta name="theme-color" content="#090909">
+<link rel="icon" href="/img/favicon-64.png" type="image/png" sizes="64x64">
+<link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<link rel="stylesheet" href="/css/site.css">
+<link rel="stylesheet" href="/css/app.css">
+<script src="/config.js"></script>
+<script src="/vendor/ethers.umd.min.js"></script>
+<style>
+  .payreq { max-width: 560px; margin: 60px auto 0; }
+  .payreq .amt { font: 500 clamp(44px, 9vw, 72px)/1 var(--mono); letter-spacing: -.03em; margin: 18px 0 6px; }
+  .payreq .amt small { font-size: .3em; color: var(--mute); margin-left: 8px; letter-spacing: 0; }
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="payreq panel">
+    <div class="ph"><span>Request to pay</span><span class="r" id="rid"></span></div>
+    <div class="pb" id="body"><div class="empty">Loading…</div></div>
+  </div>
+</main>
+<script type="module">
+  import { CFG, $, chrome, esc, usd, short, addrUrl, toast } from '/js/common.js';
+  import { ethers, state, wallets, connect, onChange, bankR, bankW, send, ensureAllowance, fromU, U } from '/js/wallet.js';
+  import { renderPicker } from '/js/walletpicker.js';
+  chrome();
+  const id = Number(new URLSearchParams(location.search).get('r'));
+  const fee = a => Math.min(a * 0.001, 2);
+  let req = null, payeeHandle = '';
+
+  async function load() {
+    if (!CFG.bank) { $('#body').innerHTML = '<p class="p">The bank contract is not deployed yet.</p>'; return; }
+    if (!id) { $('#body').innerHTML = '<p class="p">This link has no request number.</p>'; return; }
+    $('#rid').textContent = '#' + id;
+    try { req = await bankR.request(id); payeeHandle = await bankR.handleOf(req.payee); }
+    catch { $('#body').innerHTML = '<p class="p">No request with that number.</p>'; return; }
+    render();
+  }
+
+  function render() {
+    const amount = fromU(req.amount);
+    const memo = /^0x0+$/.test(req.memo) ? '' : (() => { try { return ethers.decodeBytes32String(req.memo); } catch { return ''; } })();
+    const expired = Number(req.expiry) && Number(req.expiry) < Date.now() / 1000;
+    const st = Number(req.state);
+    const status = st === 2 ? '<span class="chip live">Paid</span>' : st === 3 ? '<span class="chip off">Cancelled</span>' : expired ? '<span class="chip off">Expired</span>' : '<span class="chip plan">Open</span>';
+    const open = st === 1 && !expired;
+    $('#body').innerHTML = `
+      <div class="label">${payeeHandle ? `<span class="n">${esc(payeeHandle)}.veil</span>` : `<span class="n">${esc(short(req.payee))}</span>`}<span>asks for</span><span class="r">${status}</span></div>
+      <div class="amt"><img class="tok" src="/img/tokens/USDG.svg" alt="">${usd(amount)}<small>USDG</small></div>
+      ${memo ? `<p class="p">“${esc(memo)}”</p>` : ''}
+      <div style="margin:18px 0">
+        <div class="kv"><span>To</span><a class="mono" href="${addrUrl(req.payee)}" target="_blank" rel="noopener">${esc(short(req.payee))}</a></div>
+        <div class="kv"><span>Fee, paid by you</span><span class="num">${usd(fee(amount), 4)} USDG</span></div>
+        <div class="kv"><span>Expires</span><span>${Number(req.expiry) ? new Date(Number(req.expiry) * 1000).toLocaleString() : 'Never'}</span></div>
+      </div>
+      ${open ? (state.address
+        ? `<div class="seg" data-name="from" style="margin-bottom:14px"><button type="button" data-v="wallet" class="on">Pay from my wallet</button><button type="button" data-v="bank">From my BLACKVEIL balance</button></div>
+           <button class="btn solid" id="go" style="width:100%">Pay ${usd(amount)} USDG</button>`
+        : `<div id="wl"></div>`) : ''}`;
+    if (open && !state.address) renderPicker($('#wl'), eip => connect(eip).catch(e => toast(esc(e.message), 'err')));
+    const seg = document.querySelector('.seg');
+    seg?.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; seg.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b)); });
+    $('#go')?.addEventListener('click', async () => {
+      const fromWallet = seg.querySelector('.on').dataset.v === 'wallet';
+      if (fromWallet && !(await ensureAllowance(req.amount + U(fee(amount).toFixed(6))))) return;
+      if (await send(`Pay request #${id}`, () => bankW().payRequest(id, fromWallet))) { req = await bankR.request(id); render(); }
+    });
+  }
+  onChange(() => render());
+  load();
+  setTimeout(() => { if (req && !state.address) render(); }, 600);
+</script>
+</body>
+</html>

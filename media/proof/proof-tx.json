@@ -1,0 +1,13 @@
+{
+  "bank": "0xA47c92A006C3d8565310aB669ccde65AF229F78A",
+  "at": "2026-10-18T03:29:45.396Z",
+  "tx": {
+    "handle": "0x02280ed63fc43caa6f9325e9cae5da10093e8c59f93add3baa987f1b6a9e509a",
+    "request": "0xd4dfd6d52edb4a69e012d7633b917dabd29734e6098027359595900328b7f188",
+    "agent": "0x7fb7c8110e7ecf995acbe2efb838bebfb75e9530824a828457444d21ba36da0b",
+    "gas": "0xe055f066e5bb9dfc5ce9f2dc8bfa8fbce615518f1450392fb1adfed62171aada",
+    "refused": "0x93ced50d64c03b4323d8fc29fc90493bfb0cd94051ebaf08effd9ba451f258f7"
+  },
+  "agentId": 1,
+  "refusedReason": 7
+}

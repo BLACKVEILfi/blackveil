@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verify — BLACKVEIL</title>
+<link rel="canonical" href="https://blackveil.fi/verify">
+<meta property="og:site_name" content="BLACKVEIL">
+<meta property="og:title" content="Verify — BLACKVEIL">
+<meta property="og:description" content="Every BLACKVEIL claim with its status: verified source, the fee constants and the owner powers, read live from Robinhood Chain.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://blackveil.fi/verify">
+<meta property="og:image" content="https://blackveil.fi/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@blackveilfi">
+<meta name="twitter:title" content="Verify — BLACKVEIL">
+<meta name="twitter:description" content="Every BLACKVEIL claim with its status: verified source, the fee constants and the owner powers, read live from Robinhood Chain.">
+<meta name="twitter:image" content="https://blackveil.fi/og.png">
+<meta name="description" content="Every BLACKVEIL claim with its status, the contract facts read live from Robinhood Chain, and the transaction that proves each feature.">
+<meta name="theme-color" content="#090909">
+<link rel="icon" href="/img/favicon-64.png" type="image/png" sizes="64x64">
+<link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<link rel="stylesheet" href="/css/site.css">
+<script src="/config.js"></script>
+</head>
+<body>
+<main class="wrap">
+  <div class="page-head">
+    <div class="label"><span class="n">VERIFY</span><span>Claims, contract, evidence</span><span class="r" id="v-at">reading the chain…</span></div>
+    <h1 class="h2">Don't take<br><em>our word for it.</em></h1>
+    <p class="lead">Each claim on this site, its status, and the first on-chain transaction that shows it working. Contract facts below are read live with <span class="mono">eth_call</span>; activity numbers are counted from the contract's own event log.</p>
+  </div>
+
+  <section class="sec" style="padding-top:48px">
+    <div class="label"><span class="n">01</span><span>The contract</span><span class="r" id="v-src"></span></div>
+    <div class="facts" id="facts"><div><div class="k">Status</div><div class="v">Loading…</div></div></div>
+  </section>
+
+  <section class="sec" style="padding-top:64px">
+    <div class="label"><span class="n">02</span><span>Claims and evidence</span><span class="r">first transaction for each</span></div>
+    <div class="panel scroll-x" style="margin-top:18px"><table class="tbl" id="claims"><tbody><tr><td class="dim">Loading…</td></tr></tbody></table></div>
+  </section>
+
+  <section class="sec" style="padding-top:64px">
+    <div class="label"><span class="n">03</span><span>What the owner key can and cannot do</span></div>
+    <div class="charter" style="margin-top:18px">
+      <div><div class="tier">Can</div><ul>
+        <li><span>Set the charter token</span><b>once, ever</b></li>
+        <li><span>Set the charter minimum</span><b>setCharterMin</b></li>
+        <li><span>Choose where fees go</span><b>setFeeRecipient</b></li>
+        <li><span>Hand over ownership</span><b>transferOwnership</b></li>
+      </ul></div>
+      <div><div class="tier brass">Cannot</div><ul>
+        <li><span>Move account, vault or queued funds</span><b>no function exists</b></li>
+        <li><span>Pause the bank or an account</span><b>no function exists</b></li>
+        <li><span>Change the fee rate or cap</span><b>constants</b></li>
+        <li><span>Upgrade the code</span><b>no proxy</b></li>
+      </ul></div>
+    </div>
+  </section>
+
+  <section class="sec" style="padding-top:64px" id="counts">
+    <div class="label"><span class="n">04</span><span>How the numbers are counted</span></div>
+    <div class="panel scroll-x" style="margin-top:18px"><table class="tbl" id="howto"><tbody></tbody></table></div>
+    <p class="p" style="margin-top:14px">Open data: <a class="brass mono" href="/api/proof">/api/proof</a> · <a class="brass mono" href="/api/stats">/api/stats</a> · <a class="brass mono" href="/api/activity?limit=100">/api/activity</a></p>
+  </section>
+
+  <section class="sec" style="padding-top:64px" id="source">
+    <div class="label"><span class="n">05</span><span>Source and tests</span></div>
+    <div class="rows" style="margin-top:6px">
+      <div class="row"><div class="no">.sol</div><div><h3 class="h3">BlackveilBank.sol</h3><div class="fn">Solidity 0.8.28 · MIT · single file, no imports</div></div>
+        <p class="p">The exact source deployed on chain. Verified on Sourcify (exact match) and Blockscout (full match) — the Sourcify status above is fetched live.</p>
+        <div class="side"><a class="btn sm" href="/src/BlackveilBank.sol" target="_blank">Read source</a></div></div>
+      <div class="row"><div class="no">test</div><div><h3 class="h3">20 tests, one against real USDG</h3><div class="fn">forge test · fuzzed accounting · fork of Robinhood Chain</div></div>
+        <p class="p">Unit tests for every path (fees, handles, charter, mandates, queue, revoke, requests), a fuzz test that the USDG held always equals what the contract owes, and a fork test that runs the full flow against the real USDG token on Robinhood Chain.</p>
+        <div class="side"><span class="chip live">Passing</span></div></div>
+      <div class="row"><div class="no">plan</div><div><h3 class="h3">Encrypted balances</h3><div class="fn">not deployed</div></div>
+        <p class="p">Hiding amounts needs zero-knowledge circuits and an on-chain verifier. They are not live, and no page on this site says they are. When they ship, the verifier address and circuit source will be listed here first.</p>
+        <div class="side"><span class="chip plan">Planned</span></div></div>
+    </div>
+  </section>
+</main>
+<script type="module" src="/js/verify.js"></script>
+</body>
+</html>

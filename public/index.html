@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BLACKVEIL — A private banking house for you and your agents</title>
+<link rel="canonical" href="https://blackveil.fi/">
+<meta property="og:site_name" content="BLACKVEIL">
+<meta property="og:title" content="BLACKVEIL — The bankers are in control.">
+<meta property="og:description" content="A private bank for you and your AI agents on Robinhood Chain. Handles, USDG accounts, and agent vaults with mandates the contract enforces.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://blackveil.fi/">
+<meta property="og:image" content="https://blackveil.fi/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@blackveilfi">
+<meta name="twitter:title" content="BLACKVEIL — The bankers are in control.">
+<meta name="twitter:description" content="A private bank for you and your AI agents on Robinhood Chain. Handles, USDG accounts, and agent vaults with mandates the contract enforces.">
+<meta name="twitter:image" content="https://blackveil.fi/og.png">
+<meta name="description" content="Accounts under a handle, settled in USDG on Robinhood Chain. Give each AI agent a vault it can only spend inside a mandate the contract enforces.">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="/img/favicon-64.png" type="image/png" sizes="64x64">
+<link rel="icon" href="/img/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<link rel="preload" as="image" href="/media/hero-poster.webp" imagesrcset="/media/hero-poster-sm.webp 960w, /media/hero-poster.webp 1596w" imagesizes="100vw">
+<link rel="preload" href="/fonts/inter-tight-500.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/css/site.css">
+<script src="/config.js"></script>
+</head>
+<body class="home">
+<main>
+  <!-- hero: full-bleed stage — black Pantheon film, copy bottom-left, note bottom-right -->
+  <section class="hero">
+    <div class="film" aria-hidden="true">
+      <img class="poster" src="/media/hero-poster.webp" srcset="/media/hero-poster-sm.webp 960w, /media/hero-poster.webp 1596w" sizes="100vw" alt="" fetchpriority="high" decoding="async">
+      <video id="hero-video" muted loop playsinline disablepictureinpicture preload="none" poster="/media/hero-poster.webp"></video>
+      <div class="scrim"></div>
+    </div>
+    <div class="coin3d" id="coin3d" aria-hidden="true"></div>
+    <div class="copy">
+      <div class="latin">The black temple · a bank for humans and their agents</div>
+      <h1 class="h1">The bankers are<br>in control.</h1>
+      <p class="sub">A private bank for you and your agents. Accounts under a handle, settled in USDG, and vaults that only spend inside the mandate you sign.</p>
+      <div class="cta-row">
+        <a class="pill" href="/app"><span>Open account</span></a>
+        <a class="textlink" href="#account">How it works</a>
+      </div>
+    </div>
+    <div class="note">
+      <span>Settled on</span>
+      <b>Robinhood Chain · USDG</b>
+      <span class="live" id="frame-block"></span>
+    </div>
+  </section>
+
+  <!-- the house, live: latest events from the contract -->
+  <div class="wrap">
+    <div class="panel livepanel">
+      <div class="ph"><span><i class="dot"></i>The house · live</span><span class="r"><a href="/verify">verify every line →</a></span></div>
+      <div class="feed" id="hero-feed"><div class="empty">Reading the event log…</div></div>
+    </div>
+  </div>
+
+  <!-- live strip: real counts from the event log -->
+  <div class="strip" aria-label="Live numbers">
+    <div class="lane" id="strip"></div>
+  </div>
+
+  <div class="wrap">
+    <!-- 01 · the vault: the account -->
+    <section class="sec" id="account">
+      <figure class="fresco">
+        <img src="/media/sec-vault.webp" srcset="/media/sec-vault-sm.webp 800w, /media/sec-vault.webp 1400w" sizes="(max-width: 760px) 100vw, 1152px" alt="A vault hall of black marble strongboxes where a silver android banker reads a holographic ledger" loading="lazy" decoding="async">
+        <figcaption><span class="rn">01</span><span class="latin">The vault</span><h2 class="h2">A handle, a balance,<br>nothing else to manage.</h2></figcaption>
+      </figure>
+
+      <div class="study">
+        <div class="copy">
+          <p class="lead">Behind the black marble every account lives in one vault — an immutable contract. A name instead of forty hex characters, USDG in and out whenever you like, and payments that arrive in full: the fee rides on the payer.</p>
+          <ul class="checks">
+            <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 8.5 3 3 7-7"/></svg><span>No pause switch, no admin withdrawal — the owner key can't touch your funds</span></li>
+            <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 8.5 3 3 7-7"/></svg><span>Pay from your balance or straight from your wallet, into their account or their wallet</span></li>
+            <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 8.5 3 3 7-7"/></svg><span>Requests to pay with an optional expiry and memo, settled once</span></li>
+          </ul>
+          <div class="acts"><a class="btn solid sm" href="/app">Open the account</a><a class="btn sm" href="/verify">Read the contract</a></div>
+        </div>
+        <div class="panel">
+          <div class="ph"><span>resolve(handle)</span><span class="r">read from the contract</span></div>
+          <div class="pb form-grid">
+            <label class="field"><span>Look up a handle</span><input class="input mono" id="lookup" placeholder="atlas" spellcheck="false" maxlength="20"></label>
+            <div class="kv"><span>Handle</span><span class="mono" id="lk-h">—</span></div>
+            <div class="kv"><span>Wallet behind it</span><span class="mono" id="lk-a">—</span></div>
+            <div class="kv"><span>Status</span><span id="lk-s" class="mono dim">type a handle</span></div>
+          </div>
+          <div class="ph" style="border-top:1px solid var(--line)"><span>Handles in the house</span><span class="r" id="hcount"></span></div>
+          <div class="feed" id="handles"><div class="empty">—</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 · the house -->
+    <section class="sec" id="features">
+      <div class="sec-head center">
+        <div class="label"><span class="n">02</span><span>The house</span></div>
+        <h2 class="h2">Six things the house does.</h2>
+        <p class="lead">Five sit in the contract today. The sixth is the promise in the name, and it is marked as such.</p>
+      </div>
+      <div class="cards">
+        <div class="card"><div class="top"><span class="rn">01</span><span class="chip live">Live</span></div><h3 class="h3">Handles</h3><p class="p">gwen.veil instead of an address. Lowercase, unique, changeable. Three and four letters for charter holders.</p></div>
+        <div class="card"><div class="top"><span class="rn">02</span><span class="chip live">Live</span></div><h3 class="h3">USDG accounts</h3><p class="p">Deposit, pay, withdraw. Balances live in an immutable contract with no admin exit.</p></div>
+        <div class="card"><div class="top"><span class="rn">03</span><span class="chip live">Live</span></div><h3 class="h3">Requests to pay</h3><p class="p">A link that asks for a figure. Paid in full to you; the fee rides on the payer.</p></div>
+        <div class="card"><div class="top"><span class="rn">04</span><span class="chip live">Live</span></div><h3 class="h3">Agent vaults</h3><p class="p">Per payment, per 24 hours, review line, allowlist. The agent key spends inside them and does nothing else.</p></div>
+        <div class="card"><div class="top"><span class="rn">05</span><span class="chip live">Live</span></div><h3 class="h3">Review queue</h3><p class="p">Anything above your line waits, reserved from the vault, until you approve or reject it.</p></div>
+        <div class="card"><div class="top"><span class="rn">06</span><span class="chip plan">Planned</span></div><h3 class="h3">Encrypted balances</h3><p class="p">Amounts hidden from the public chain with zero-knowledge proofs. Not live — today every amount is public.</p></div>
+      </div>
+    </section>
+
+    <!-- 03 · the mandate -->
+    <section class="sec" id="mandates">
+      <figure class="fresco">
+        <img src="/media/sec-mandate.webp" srcset="/media/sec-mandate-sm.webp 800w, /media/sec-mandate.webp 1400w" sizes="(max-width: 760px) 100vw, 1152px" alt="A silver android senator in a black toga holding three holographic rings above an open hand" loading="lazy" decoding="async">
+        <figcaption><span class="rn">03</span><span class="latin">The mandate</span><h2 class="h2">Limits the chain enforces,<br>not a server promises.</h2></figcaption>
+      </figure>
+
+      <div class="study">
+        <div class="copy">
+          <p class="lead">Every agent in the house answers to a mandate: its own key, its own vault, in USDG, inside the limits you signed — and nothing else. Lose the key and you pause or revoke; you never race it.</p>
+          <ul class="checks">
+            <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 8.5 3 3 7-7"/></svg><span>Settles, queues or refuses: the agent asks routeFor before it spends</span></li>
+            <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 8.5 3 3 7-7"/></svg><span>Refusals are written on chain too, with the reason</span></li>
+            <li><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 8.5 3 3 7-7"/></svg><span>Rotate the key and keep the vault, the mandate and the history</span></li>
+          </ul>
+          <div class="acts"><a class="btn sm" href="/agents">For agents</a></div>
+        </div>
+        <div class="panel">
+          <div class="ph"><span>routeFor(agent, recipient, amount)</span><span class="r">same order as the contract</span></div>
+          <div class="sim" id="sim">
+            <div class="ctrl">
+              <label class="slider"><div class="top"><span>Per payment</span><span class="num" data-o="per"></span></div><input type="range" min="5" max="200" step="5" value="50" data-k="per"></label>
+              <label class="slider"><div class="top"><span>Per 24 hours</span><span class="num" data-o="day"></span></div><input type="range" min="20" max="600" step="10" value="200" data-k="day"></label>
+              <label class="slider"><div class="top"><span>Review above</span><span class="num" data-o="review"></span></div><input type="range" min="0" max="200" step="5" value="20" data-k="review"></label>
+              <label class="slider"><div class="top"><span>Spent in this window</span><span class="num" data-o="spent"></span></div><input type="range" min="0" max="600" step="5" value="120" data-k="spent"></label>
+              <label class="slider"><div class="top"><span>In the vault</span><span class="num" data-o="vault"></span></div><input type="range" min="0" max="1000" step="10" value="300" data-k="vault"></label>
+            </div>
+            <div class="out">
+              <label class="slider"><div class="top"><span>The agent wants to pay</span><span class="num" data-o="amount"></span></div><input type="range" min="1" max="250" step="1" value="15" data-k="amount"></label>
+              <div class="verdict" id="verdict">Settles</div>
+              <div class="why" id="why"></div>
+              <div class="meter"><i id="meter"></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 · the charter -->
+    <section class="sec" id="charter">
+      <div class="coinrow">
+        <div class="coin"><img src="/media/sec-coin.webp" srcset="/media/sec-coin-sm.webp 800w, /media/sec-coin.webp 1400w" sizes="(max-width: 760px) 100vw, 560px" alt="The silver VEIL coin on a black marble plinth" loading="lazy" decoding="async"></div>
+        <div class="copy">
+          <div class="label"><span class="n">04</span><span>The charter</span></div>
+          <h2 class="h2">$BLVE is the coin<br>of the temple.</h2>
+          <p class="lead">Hold the charter minimum and the contract opens ten agent vaults instead of one, and three- and four-letter handles. It reads your balance with <span class="mono">balanceOf</span> — a key, not a dividend. Launches on Pons, paired with ETH.</p>
+          <div class="ca" role="button" tabindex="0" id="band-ca"></div>
+          <div class="acts"><a class="btn solid" id="trade" href="#charter">Trade on Pons</a></div>
+        </div>
+      </div>
+      <div class="charter" style="margin-top:12px">
+        <div><div class="tier">Member · account</div><div class="big">1 agent</div><ul>
+          <li><span>Agent vaults</span><b>1</b></li><li><span>Handle length</span><b>5–20</b></li><li><span>Payments, requests, queue</span><b>included</b></li></ul></div>
+        <div><div class="tier">Patron · charter holder</div><div class="big">10 agents</div><ul>
+          <li><span>Agent vaults</span><b>10</b></li><li><span>Handle length</span><b>3–20</b></li><li><span>Checked by</span><b>charterToken.balanceOf()</b></li></ul></div>
+      </div>
+    </section>
+
+    <!-- 05 · the toll -->
+    <section class="sec">
+      <div class="band">
+        <div class="seal"><span class="rn">05</span></div>
+        <div>
+          <div class="label"><span class="n">The toll</span><span>· the price list</span></div>
+          <h3 class="h2" style="font-size:clamp(24px,2.4vw,32px);margin-top:10px">One rate. 0.10 %, capped at 2 USDG.</h3>
+          <p class="p">Every payment prices the same way: <span class="mono">min(amount × 10 bps, 2 USDG)</span>, added on the payer so the receiver gets the full figure. Deposits, withdrawals, handles and agent set-up are free apart from gas. The numbers are constants in the contract.</p>
+        </div>
+        <a class="btn" href="/verify">See the constants</a>
+      </div>
+    </section>
+
+    <!-- 06 · transmissions -->
+    <section class="sec" id="faq">
+      <div class="sec-head center"><div class="label"><span class="n">06</span><span>Transmissions</span></div><h2 class="h2">Asked on the temple steps.</h2></div>
+      <div class="faq">
+        <details><summary>Is BLACKVEIL a bank?</summary><p>No. It is an immutable smart contract on Robinhood Chain that keeps USDG balances, handles, requests and agent vaults. Nobody — including us — can freeze or move what you hold in it.</p></details>
+        <details><summary>Are my balances private?</summary><p>Not yet. Today every amount is visible on chain, like any token transfer. Encrypted balances are planned and will be marked live only when the circuits and verifier are deployed and checkable.</p></details>
+        <details><summary>What stops my agent from draining its vault?</summary><p>The contract. agentPay() only moves funds when the amount fits the per-payment limit, the 24-hour limit and the vault. Above your review line it waits for you. Anything else is refused and logged.</p></details>
+        <details><summary>What if the agent key leaks?</summary><p>Pause or revoke the agent — revoking returns the vault to your balance in the same transaction. Or rotate to a new key and keep the vault, mandate and history.</p></details>
+        <details><summary>What does $BLVE do?</summary><p>It is the charter. Holding the on-chain minimum opens ten agent vaults instead of one and lets you claim three- and four-letter handles. It pays no yield: fees go to the house.</p></details>
+        <details><summary>What can the owner key do?</summary><p>Set the charter token once, set the charter minimum, choose where fees go, and hand over ownership. That is the full list — see Verify for the source.</p></details>
+      </div>
+    </section>
+  </div>
+
+  <!-- closing: the black temple at night -->
+  <section class="finale">
+    <img src="/media/sec-temple.webp" srcset="/media/sec-temple-sm.webp 800w, /media/sec-temple.webp 1400w" sizes="100vw" alt="A black marble temple at night with a beam of light rising from its roof" loading="lazy" decoding="async">
+    <div class="scrim"></div>
+    <div class="copy">
+      <div class="label"><span class="n">BLACKVEIL</span><span>· Robinhood Chain</span></div>
+      <h2 class="h1">The house is open.</h2>
+      <p class="sub">Deposit. Claim a handle. Sign a mandate.</p>
+      <div class="cta-row"><a class="pill" href="/app"><span>Open account</span></a><a class="textlink" href="/agents">For agents</a></div>
+    </div>
+  </section>
+</main>
+<script type="module" src="/js/home.js"></script>
+</body>
+</html>
