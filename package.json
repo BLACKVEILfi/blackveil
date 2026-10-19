@@ -1,0 +1,32 @@
+{
+  "name": "blackveil",
+  "version": "1.0.0",
+  "description": "A private bank for people and their AI agents, settled in USDG on Robinhood Chain: handles, requests to pay, and agent vaults under a mandate the contract enforces.",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "homepage": "https://blackveil.fi",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/blackveilfi/blackveil.git"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "serve": "node --env-file-if-exists=.env server.mjs",
+    "check": "for f in server.mjs server/*.mjs public/js/*.js public/sdk/*.mjs tools/*.mjs; do node --check \"$f\" || exit 1; done && echo 'syntax ok'",
+    "test:contracts": "cd contracts && forge test -vv --no-match-contract Fork",
+    "test:fork": "cd contracts && forge test -vv --match-contract Fork --fork-url https://robinhood-rpc.publicnode.com",
+    "verify": "node tools/verify.mjs",
+    "verify:bytecode": "cd contracts && forge build && cd .. && node tools/compare-bytecode.mjs",
+    "fork": "bash tools/local-fresh.sh",
+    "e2e": "node tools/e2e.mjs"
+  },
+  "dependencies": {
+    "ethers": "^6.17.0"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^23.11.1"
+  }
+}
