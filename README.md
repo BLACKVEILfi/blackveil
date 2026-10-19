@@ -8,6 +8,12 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/BLACKVEILfi/blackveil/actions/workflows/ci.yml"><img src="https://github.com/BLACKVEILfi/blackveil/actions/workflows/ci.yml/badge.svg" alt="ci"></a>
+  <a href="https://repo.sourcify.dev/4663/0xA47c92A006C3d8565310aB669ccde65AF229F78A"><img src="https://img.shields.io/badge/Sourcify-exact%20match-2ea44f" alt="Sourcify exact match"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT"></a>
+</p>
+
+<p align="center">
   <a href="https://blackveil.fi">blackveil.fi</a> ·
   <a href="https://blackveil.fi/app">App</a> ·
   <a href="https://blackveil.fi/agents">Agent docs</a> ·
