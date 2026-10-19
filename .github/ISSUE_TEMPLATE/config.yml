@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/blackveilfi/blackveil/security/advisories/new
+    about: Please report security issues privately.
+  - name: Updates and announcements
+    url: https://x.com/blackveilfi
+    about: The contract address and news are posted on @blackveilfi first.

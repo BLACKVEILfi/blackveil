@@ -9,6 +9,7 @@ export const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;'
 export const ICON = {
   copy: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="5.5" y="5.5" width="8" height="8" rx="1.5"/><path d="M10.5 5.5V3.8A1.3 1.3 0 0 0 9.2 2.5H3.8A1.3 1.3 0 0 0 2.5 3.8v5.4a1.3 1.3 0 0 0 1.3 1.3h1.7"/></svg>',
   x: '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M12.2 1.5h2.2L9.6 7l5.6 7.5h-4.4L7.4 10l-4 4.5H1.2l5.2-5.9L1 1.5h4.5l3.1 4.1 3.6-4.1Zm-.8 11.7h1.2L4.9 2.7H3.6l7.8 10.5Z"/></svg>',
+  gh: '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>',
   tg: '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M14.6 2.3 1.9 7.2c-.9.3-.8 1.6.1 1.8l3.1.9 1.2 3.8c.2.7 1.1.9 1.6.4l1.8-1.7 3.3 2.4c.6.4 1.4.1 1.6-.6l2-10.6c.2-.9-.7-1.6-1.6-1.3ZM6.4 9.4l6-5.2-4.7 6.1-.3 2.2-1-3.1Z"/></svg>',
   arrow: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8h10M9 4l4 4-4 4"/></svg>',
   ext: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6 3H3.5A1 1 0 0 0 2.5 4v8.5a1 1 0 0 0 1 1H12a1 1 0 0 0 1-1V10M9 2.5h4.5V7M13.5 2.5 7 9"/></svg>',
@@ -117,7 +118,7 @@ export function chrome() {
       ${CFG.bank ? `<a href="${addrUrl(CFG.bank)}" target="_blank" rel="noopener">Bank contract <span class="mono">${esc(short(CFG.bank))}</span></a>` : '<span class="dim">Bank contract deploys before launch</span>'}
       <a href="/verify">Verify</a>
       <a href="/agents">Agents</a>
-      <div class="links">${social('x')}${social('telegram')}</div>
+      <div class="links">${social('x')}${social('telegram')}${CFG.github ? `<a class="icon-btn" href="${esc(CFG.github)}" target="_blank" rel="noopener" aria-label="GitHub">${ICON.gh}</a>` : ''}</div>
     </div>
     <p class="fine">BLACKVEIL is software on a public blockchain, not a licensed bank. Accounts hold USDG in an immutable contract on Robinhood Chain; nobody, including the team, can move them for you. Amounts are public on chain today — encrypted balances are planned and marked as such on every page. $BLVE is a charter token that unlocks features; it pays no yield and is not an investment product.</p>`;
   document.body.append(foot);

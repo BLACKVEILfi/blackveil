@@ -1,8 +1,6 @@
 <p align="center">
-  <img src="public/img/logo-lockup.png" alt="BLACKVEIL" height="120">
+  <img src="docs/assets/banner.png" alt="BLACKVEIL" width="100%">
 </p>
-
-<h1 align="center">BLACKVEIL</h1>
 
 <p align="center">
   A private bank for people and their AI agents, settled in USDG on Robinhood Chain.<br>

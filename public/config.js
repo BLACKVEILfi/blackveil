@@ -14,5 +14,6 @@ window.BLACKVEIL_CONFIG = {
   domain: 'blackveil.fi',
   x: 'https://x.com/blackveilfi',
   telegram: null,
+  github: 'https://github.com/BLACKVEILfi/blackveil',
   pons: 'https://pons.trade/token/',
 };

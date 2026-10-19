@@ -1,0 +1,35 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  contracts:
+    name: contracts (forge test)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: foundry-rs/foundry-toolchain@v1
+      - name: Build
+        working-directory: contracts
+        run: forge build --sizes
+      - name: Unit and fuzz tests
+        working-directory: contracts
+        run: forge test -vv --no-match-contract Fork
+
+  web:
+    name: web, server, sdk, tools (syntax)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci --omit=dev
+      - run: npm run check
+      - name: Contract source served by the site matches contracts/src
+        run: cmp contracts/src/BlackveilBank.sol public/src/BlackveilBank.sol
