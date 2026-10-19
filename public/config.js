@@ -13,7 +13,7 @@ window.BLACKVEIL_CONFIG = {
   sourcify: 'https://repo.sourcify.dev/4663/',
   domain: 'blackveil.fi',
   x: 'https://x.com/blackveilfi',
-  telegram: null,
+  telegram: 'https://t.me/blackveilfi',
   github: 'https://github.com/BLACKVEILfi/blackveil',
   pons: 'https://pons.trade/token/',
 };
