@@ -10,8 +10,8 @@
 | Deployer / owner | `0x199e809f1c562336e0Ea87B8ec0dD71d26f24B40` |
 | Fee recipient | `0xe3cc4B8FDd939366B9D156f162D0d97E967c16E9` |
 | Settlement token (USDG) | `0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168` |
-| Charter token ($BLVE) | not set yet; set once with `setCharterToken` after launch |
-| Charter minimum | planned 1,000,000 $BLVE (`setCharterMin`) |
+| Charter token ($BLVE) | `0xC51b827315efb953BD53643d3BC6db08fe67C724` (Pons v2, 1,000,000,000 supply) · set once: tx `0x0ac137afd2eb821bbca85ac3a57133c2c6da90c246e651ce62fd308e3236c8fd` |
+| Charter minimum | 1,000,000 $BLVE · tx `0x05455209e91b16cc0cfb0ec8f8026ddca33fb34441df3c8c601f5dfdcea300b3` |
 | Compiler | solc `0.8.28+commit.7893614a`, `via_ir`, optimizer 2000 runs, EVM `cancun` |
 | Verification | Sourcify exact match · Blockscout full match |
 | Explorer | <https://robinhoodchain.blockscout.com/address/0xA47c92A006C3d8565310aB669ccde65AF229F78A> |

@@ -43,7 +43,7 @@ cast call $BANK "FEE_BPS()(uint256)"       --rpc-url $RPC   # 10   → 0.10 %
 cast call $BANK "FEE_CAP()(uint256)"       --rpc-url $RPC   # 2000000 → 2 USDG
 cast call $BANK "owner()(address)"         --rpc-url $RPC
 cast call $BANK "feeRecipient()(address)"  --rpc-url $RPC
-cast call $BANK "charterToken()(address)"  --rpc-url $RPC   # 0x000…0 until $BLVE launches
+cast call $BANK "charterToken()(address)"  --rpc-url $RPC   # 0xC51b827315efb953BD53643d3BC6db08fe67C724 ($BLVE)
 ```
 
 `FEE_BPS` and `FEE_CAP` are `constant` in the source: there is no setter for them.

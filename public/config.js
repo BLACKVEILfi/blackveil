@@ -1,7 +1,7 @@
 // Edit and redeploy this file only (./deploy.sh config) to change links, the token and the bank address.
 window.BLACKVEIL_CONFIG = {
   ticker: 'BLVE',
-  ca: null,                 // $BLVE contract address once launched (full 0x… address) — node tools/set-ca.mjs 0x…
+  ca: '0xC51b827315efb953BD53643d3BC6db08fe67C724',                 // $BLVE contract address once launched (full 0x… address) — node tools/set-ca.mjs 0x…
   caPlaceholder: 'UNDER THE VEIL',
   bank: '0xA47c92A006C3d8565310aB669ccde65AF229F78A',               // BlackveilBank contract on Robinhood Chain — written by tools/deploy.mjs
   deployBlock: 91409330,
@@ -15,5 +15,5 @@ window.BLACKVEIL_CONFIG = {
   x: 'https://x.com/blackveilfi',
   telegram: 'https://t.me/blackveilfi',
   github: 'https://github.com/BLACKVEILfi/blackveil',
-  pons: 'https://pons.trade/token/',
+  pons: 'https://ponsfamily.com/launchpad/',
 };

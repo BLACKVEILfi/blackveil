@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.1 — 2026-10-21
+
+- $BLVE launched on Pons: `0xC51b827315efb953BD53643d3BC6db08fe67C724`.
+- Charter set on chain: `setCharterToken` (0x0ac137af…) and `setCharterMin(1,000,000 BLVE)` (0x05455209…). Holders of 1,000,000 $BLVE get ten agent vaults and three- and four-letter handles.
+- Site: CA in the header, Pons link, Telegram group t.me/blackveilfi.
+
 ## 1.0.0 — 2026-10-18
 
 First public release.

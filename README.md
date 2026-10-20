@@ -60,7 +60,7 @@ Everything that holds or moves money is one immutable contract, `BlackveilBank`.
 | Source verification | [Sourcify: exact match](https://repo.sourcify.dev/4663/0xA47c92A006C3d8565310aB669ccde65AF229F78A) · [Blockscout: full match](https://robinhoodchain.blockscout.com/address/0xA47c92A006C3d8565310aB669ccde65AF229F78A?tab=contract) |
 | Owner | `0x199e809f1c562336e0Ea87B8ec0dD71d26f24B40` |
 | Fee recipient | `0xe3cc4B8FDd939366B9D156f162D0d97E967c16E9` |
-| $BLVE (charter token) | announced at launch on [@blackveilfi](https://x.com/blackveilfi) and on [blackveil.fi](https://blackveil.fi) first |
+| $BLVE (charter token) | [`0xC51b827315efb953BD53643d3BC6db08fe67C724`](https://robinhoodchain.blockscout.com/token/0xC51b827315efb953BD53643d3BC6db08fe67C724) · [Pons](https://ponsfamily.com/launchpad/0xC51b827315efb953BD53643d3BC6db08fe67C724) · charter set on chain ([`setCharterToken`](https://robinhoodchain.blockscout.com/tx/0x0ac137afd2eb821bbca85ac3a57133c2c6da90c246e651ce62fd308e3236c8fd)) |
 
 More detail, including the mainnet transactions that exercise every feature, is in [docs/DEPLOYMENTS.md](docs/DEPLOYMENTS.md).
 
@@ -122,7 +122,7 @@ There is no pause, no upgrade path, no proxy, no `delegatecall`, no `selfdestruc
 
 ## $BLVE, the charter
 
-$BLVE is the charter token of BLACKVEIL, launched on Pons on Robinhood Chain. The contract reads it with `balanceOf`: an account holding at least `charterMin` (planned: 1,000,000 $BLVE) gets **ten** agent vaults instead of one and may claim three- and four-letter handles. It is a key, not a dividend: it pays no yield, and fees go to the fee recipient. Until the token is launched and `setCharterToken` is called, `hasCharter` returns `false` for everyone and every account works with one agent vault and handles of five characters or more.
+$BLVE is the charter token of BLACKVEIL, launched on Pons on Robinhood Chain. The contract reads it with `balanceOf`: an account holding at least `charterMin` (1,000,000 $BLVE) gets **ten** agent vaults instead of one and may claim three- and four-letter handles. It is a key, not a dividend: it pays no yield, and fees go to the fee recipient. The charter token was set on chain on 21 October 2026 ([`setCharterToken`](https://robinhoodchain.blockscout.com/tx/0x0ac137afd2eb821bbca85ac3a57133c2c6da90c246e651ce62fd308e3236c8fd), [`setCharterMin`](https://robinhoodchain.blockscout.com/tx/0x05455209e91b16cc0cfb0ec8f8026ddca33fb34441df3c8c601f5dfdcea300b3)); it can never be changed to another token.
 
 ## What is live and what is planned
 
@@ -133,7 +133,7 @@ $BLVE is the charter token of BLACKVEIL, launched on Pons on Robinhood Chain. Th
 | Requests to pay | Live |
 | Agent vaults with mandates | Live |
 | Review queue (approve / reject) | Live |
-| Charter ($BLVE): ten vaults, short handles | Live in the contract; switched on when the token launches |
+| Charter ($BLVE): ten vaults, short handles | Live |
 | Encrypted balances | **Planned, not live.** Today every amount is public on chain, like any token transfer. It will be marked live only when the circuits and verifier are deployed and can be checked. |
 
 ## Repository layout
